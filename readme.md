@@ -22,7 +22,7 @@ The script checks `~/.cf-dns-backup/accounts.txt` if accounts.txt is found in th
 
 Tokens only need `Zone:DNS:Read` permission. Making read-only tokens is a good idea. Include all zones that you want to backup. 
 
-![](help/cf-create-token.png)
+![](img/cf-create-token.png)
 
 You could need multiple tokens if you have multiple Cloudflare accounts (as I do, personal, work, etc). One token per account.
 
