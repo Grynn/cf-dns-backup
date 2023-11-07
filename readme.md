@@ -7,24 +7,29 @@ I recommend running this once a day via cron.
 ## Install
 
 ```
-git clone ...
-make install
+wget "https://raw.githubusercontent.com/Grynn/cf-dns-backup/main/cf-dns-backup.sh" -O /usr/local/bin/cf-dns-backup
+chmod +x /usr/local/bin/cf-dns-backup
 ```
-
-or brew install ...
 
 ### Configuration
 
-Create `accounts.txt` and add the Cloudflare api tokens (one per line). You can get the tokens from https://dash.cloudflare.com/profile/api-tokens
+Create `~/.cf-dns-backup/accounts.txt` and add the Cloudflare API tokens (one per line). 
 
-If running via cron it is nicer to read tokens from a file that is not in the repo. 
-The script checks `~/.cf-dns-backup/accounts.txt` if accounts.txt is found in the same directory as the script.
-
+You can get the tokens from https://dash.cloudflare.com/profile/api-tokens
 Tokens only need `Zone:DNS:Read` permission. Making read-only tokens is a good idea. Include all zones that you want to backup. 
+
+accounts.txt format:
+```
+23214134
+2131231
+```
+
+That's it, no email ids etc. Just API tokens, one per line.
+If accounts.txt is found in the same directory as the script, that is used instead.
 
 ![](img/cf-create-token.png)
 
-You could need multiple tokens if you have multiple Cloudflare accounts (as I do, personal, work, etc). One token per account.
+### Usage
 
 zone files are stored in `zones/` and git is used to track changes. 
 
@@ -38,11 +43,9 @@ git push -u origin main
 
 If a remote is configured, `cf-dns-backup` will try pushing automatically (if changes are detected).
 
-### Usage
+### Cron
 
-Run via cron once a day or adhoc
-If running via cron it is nicer to read tokens from a file that is not in the repo. 
-The script checks `~/.cf-dns-backup/accounts.txt` if not accounts.txt is found in the same directory as the script.
+Recommended: run via cron once a day 
 
 ```
 /fullpath/to/cf-dns-backup.sh
