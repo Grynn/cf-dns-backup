@@ -90,10 +90,11 @@ function backup() {
         flarectl z l
     fi
     
-    flarectl --json z l | jq -r '.[] | .Name' | parallel $bar "flarectl zone x --zone {} > \"${zone_files_dir}/{}.zone.txt\""
+    flarectl --json z l | jq -r '.[] | .Name' | parallel $bar -j 3 "flarectl zone x --zone {} > \"${zone_files_dir}/{}.zone.txt\""
 }
 
 function clean() {
+    if [ $VERBOSE ]; then echo "Cleaning up zone files in ${zone_files_dir}"; fi
     find "${zone_files_dir}" -type f -exec bash -c "gsed -i -e '/IN[[:space:]]\+SOA[[:space:]]\+/d' -e '/;; Exported: /d' \"{}\"" \;
 }
 
@@ -110,6 +111,9 @@ mkdir -p "${zone_files_dir}"
 
 # For each token in $TOKEN[], backup the zones
 for token in "${TOKEN[@]}"; do
+    if [ -z "$token" ]; then
+        continue
+    fi
     backup "$token"
 done
 
